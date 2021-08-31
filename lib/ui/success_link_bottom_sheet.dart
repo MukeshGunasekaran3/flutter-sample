@@ -44,7 +44,7 @@ class _AccountLinkSccBottomSheetState extends State<AccountLinkSccBottomSheet> {
           SizedBox(
             height: 20.h,
           ),
-          getBoldText('Your Account Linked\nSuccessfully', fontcolor: ColorResources.SUCCESS_COLOR, fontsize: 25.sp, textAlign: TextAlign.center),
+          getBoldText('All Done!!', fontcolor: ColorResources.SUCCESS_COLOR, fontsize: 25.sp, textAlign: TextAlign.center),
         ],
       ),
     );

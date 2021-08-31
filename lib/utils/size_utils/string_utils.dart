@@ -1,4 +1,3 @@
-
 bool validateMobile(String value) {
   String patttern = r'^[0-9]{10}$';
   print(value);
@@ -7,7 +6,7 @@ bool validateMobile(String value) {
   if (isStringEmpty(value)) {
     return false;
   } else if (!regExp.hasMatch(value)) {
-    if (value.length == 10) return true;
+    // if (value.length == 10) return true;
     return false;
   }
   return true;

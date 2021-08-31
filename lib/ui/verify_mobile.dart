@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -38,12 +40,17 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
   MobileVerificationBloc? _bloc;
   LoginBloc? _blocLogin;
   SignUpBloc? _blocSignup;
+  bool hasError = false;
+  String errorText = "";
+  Color boxColor = ColorResources.COLOR_PRIMARY;
+  StreamController<ErrorAnimationType>? errorController;
   @override
   void initState() {
     super.initState();
     _bloc = MobileVerificationBloc();
     _blocLogin = LoginBloc();
     _blocSignup = SignUpBloc();
+    errorController = StreamController<ErrorAnimationType>();
   }
 
   @override
@@ -51,6 +58,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
     _bloc!.dispose();
     _blocLogin!.dispose();
     _blocSignup!.dispose();
+    errorController?.close();
     super.dispose();
   }
 
@@ -120,24 +128,28 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 5.h, left: 18.w, right: 18.w),
-                          child: Row(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: getRegularText('The mobile number you have given us is:\n${widget.mobileNumber} you can edit your number', fontsize: 15.sp, fontcolor: Colors.grey),
-                              ),
-                              SizedBox(
-                                height: 8.w,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  //
-                                  Navigator.of(context).pop(context);
-                                },
-                                child: Image.asset(
-                                  Images.edit,
-                                  width: 18.w,
-                                  height: 18.h,
-                                ),
+                              getRegularText('The mobile number you have given us is: ${widget.mobileNumber}', fontsize: 15.sp, fontcolor: Colors.grey),
+                              Row(
+                                children: [
+                                  getRegularText('${widget.isFromSignUp ? 'Register with a different number' : 'Use a different number'}', fontsize: 15.sp, fontcolor: Colors.grey),
+                                  SizedBox(
+                                    width: 8.w,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      //
+                                      Navigator.of(context).pop(context);
+                                    },
+                                    child: Image.asset(
+                                      Images.edit,
+                                      width: 18.w,
+                                      height: 18.h,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -168,28 +180,68 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                             animationType: AnimationType.fade,
                             controller: _otpController,
                             pinTheme: PinTheme(
-                                shape: PinCodeFieldShape.box,
-                                borderWidth: 0.9,
-                                activeColor: ColorResources.COLOR_PRIMARY,
-                                inactiveFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                                inactiveColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                                borderRadius: BorderRadius.circular(5),
-                                fieldWidth: (MediaQuery.of(context).size.width - 36) / 6 > 55 ? 55.h : (MediaQuery.of(context).size.width - 36) / 6,
-                                fieldHeight: 55.h,
-                                activeFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                                selectedFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                                selectedColor: ColorResources.COLOR_PRIMARY),
+                              shape: PinCodeFieldShape.box,
+                              borderWidth: 0.9,
+                              activeColor: boxColor, //hasError ? Colors.redAccent : ColorResources.COLOR_PRIMARY,
+                              inactiveFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                              inactiveColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                              borderRadius: BorderRadius.circular(5),
+                              fieldWidth: (MediaQuery.of(context).size.width - 36) / 6 > 55 ? 55.h : (MediaQuery.of(context).size.width - 36) / 6,
+                              fieldHeight: 55.h,
+                              activeFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                              selectedFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                              selectedColor: boxColor, //hasError ? Colors.redAccent : ColorResources.COLOR_PRIMARY,
+                            ),
                             cursorColor: Colors.grey,
                             animationDuration: Duration(milliseconds: 300),
                             enableActiveFill: true,
-                            //  errorAnimationController: errorController,
+                            errorAnimationController: errorController,
                             // controller: textEditingController,
+
                             keyboardType: TextInputType.number,
                             onCompleted: (v) {
                               if (widget.isFromSignUp) {
-                                _bloc!.verifyOtpForSignUp(mobileNumber: "${widget.mobileNumber}", otp: _otpController.text.toString(), otpReference: widget.otpReference, context: conte);
+                                _bloc!.verifyOtpForSignUp(
+                                  mobileNumber: "${widget.mobileNumber}",
+                                  otp: _otpController.text.toString(),
+                                  otpReference: widget.otpReference,
+                                  context: conte,
+                                  onSuccess: () {
+                                    boxColor = Colors.green;
+                                    errorText = "";
+                                    setState(() {});
+                                  },
+                                  onFailure: (errorMessage) {
+                                    if (errorMessage == "invalid otp provided") {
+                                      errorController?.add(ErrorAnimationType.shake);
+                                      hasError = true;
+                                      boxColor = Colors.redAccent;
+                                      errorText = errorMessage;
+                                      setState(() {});
+                                    }
+                                  },
+                                );
                               } else {
-                                _bloc!.verifyOtp(mobileNumber: "${widget.mobileNumber}", otp: _otpController.text.toString(), otpReference: widget.otpReference, context: conte);
+                                _bloc!.verifyOtp(
+                                  mobileNumber: "${widget.mobileNumber}",
+                                  otp: _otpController.text.toString(),
+                                  otpReference: widget.otpReference,
+                                  context: conte,
+                                  onSuccess: () {
+                                    boxColor = Colors.green;
+                                    errorText = "";
+                                    setState(() {});
+                                  },
+                                  onFailure: (errorMessage) {
+                                    if (errorMessage == "invalid otp provided") {
+                                      errorController?.add(ErrorAnimationType.shake);
+                                      hasError = true;
+                                      boxColor = Colors.redAccent;
+                                      errorText = errorMessage;
+                                      setState(() {});
+                                    }
+                                  },
+                                );
                               }
                             },
                             onChanged: (value) {
@@ -198,6 +250,13 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                               //   //  currentText = value;
                               // });
                             },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                          child: Text(
+                            hasError ? errorText : "",
+                            style: TextStyle(color: boxColor, fontSize: 12, fontWeight: FontWeight.w400),
                           ),
                         ),
                         Padding(

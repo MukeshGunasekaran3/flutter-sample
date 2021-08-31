@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,6 +13,7 @@ import 'package:onemoney_sdk/model/repsonse.dart';
 import 'package:onemoney_sdk/ui/approve_consent.dart';
 import 'package:onemoney_sdk/ui/custom_button.dart';
 import 'package:onemoney_sdk/utils/CommonWidget.dart';
+import 'package:onemoney_sdk/utils/app_dialogs.dart';
 import 'package:onemoney_sdk/utils/app_sizes.dart';
 import 'package:onemoney_sdk/utils/color_resources.dart';
 import 'package:onemoney_sdk/utils/images.dart';
@@ -144,7 +148,7 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                         break;
 
                       case Status.COMPLETED:
-                        print(snapshot.data!.data.toString());
+                        log((snapshot.data!.data as Consent).toJson().toString());
                         var consentData = (snapshot.data!.data as Consent);
 
                         if (consentData.consents?.isEmpty ?? true) {
@@ -156,7 +160,7 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                           );
                         }
                         consentsList = consentData.consents;
-
+                        var cibil = '';
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -173,7 +177,8 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                             Padding(
                               padding: EdgeInsets.only(top: 5.h, left: 18.w, right: 18.w, bottom: 30.h),
                               child: Text(
-                                "These consents will be used to fetch your financial data from Onemoney account aggregator a well as from Credit Bureau.",
+                                // "These consents will be used to fetch your financial data from Onemoney account aggregator a well as from Credit Bureau.",
+                                "These consents will be used to fetch your data from banks as well as ${cibil} credit bureaus.",
                                 style: popinsRegular.copyWith(fontSize: SizeConfig.TEXT_SIZE_SUB_HEADING_, color: Colors.grey),
                                 textAlign: TextAlign.start,
                               ),
@@ -267,7 +272,7 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                       return Padding(
                         padding: EdgeInsets.only(
                           top: 15.w,
-                          bottom: 50.h,
+                          bottom: 40.h,
                         ),
                         child: Column(
                           children: [
@@ -359,7 +364,7 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                                 //           case Status.LOADING:
                                 //             print(snapshot.data!.message);
                                 //             return Padding(
-                                //               padding: EdgeInsets.only(bottom: 50.h),
+                                //               padding: EdgeInsets.only(bottom: 40.h),
                                 //               child: Center(
                                 //                 child: Container(
                                 //                   width: 40.w,
@@ -443,7 +448,7 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                     margin: EdgeInsets.only(right: 10.w),
                     child: Center(
                       child: Icon(
-                        Icons.calendar_today_sharp,
+                        Icons.account_balance_outlined,
                         size: 20.0,
                         color: ColorResources.COLOR_PRIMARY,
                       ),
@@ -463,12 +468,17 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                 style: popinsRegular.copyWith(fontSize: 14.sp, color: Colors.black54),
               ),
               SizedBox(
-                height: 50.h,
+                height: 40.h,
               ),
               Row(
                 children: [
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
+                      var connectivityResult = await (Connectivity().checkConnectivity());
+                      if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
+                        AppDialogs.showError(context, "No internet connection");
+                        return;
+                      }
                       Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => FinancialInstitutionScreen()));
                     },
                     child: Text(
@@ -617,7 +627,7 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                     margin: EdgeInsets.only(right: 10.w),
                     child: Center(
                       child: Icon(
-                        Icons.calendar_today_sharp,
+                        Icons.calendar_today_outlined,
                         size: 20.0,
                         color: ColorResources.COLOR_PRIMARY,
                       ),
@@ -631,21 +641,21 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
             SizedBox(
               height: 10.h,
             ),
-            Text(
-              'The historical duration, such as the last 6 months(for example), for which your data is being sought',
-              style: popinsRegular.copyWith(
-                fontSize: 14.sp,
-                color: Colors.black54,
-              ),
-            ),
-            SizedBox(
-              height: 50.h,
-            ),
             getDates(
               startDate: DateFormat('dd MMM yyyy').format(DateTime.parse(consentsData.fiDatarangeFrom!)),
               endDate: DateFormat('dd MMM yyyy').format(DateTime.parse(consentsData.fiDatarangeTo!)),
             ),
             // getDates(startDate: "${dateRangeData['from']}", endDate: "${dateRangeData['to']}"),
+            SizedBox(
+              height: 40.h,
+            ),
+            Text(
+              'The historical duration, such as the last 6 months (for example) for which your data is being sought',
+              style: popinsRegular.copyWith(
+                fontSize: 14.sp,
+                color: Colors.black54,
+              ),
+            ),
           ],
         ),
       ),
@@ -659,14 +669,14 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Icons.calendar_today_sharp,
-              size: 20.0,
-              color: ColorResources.COLOR_PRIMARY,
-            ),
-            SizedBox(
-              height: 5.h,
-            ),
+            // Icon(
+            //   Icons.calendar_today_outlined,
+            //   size: 20.0,
+            //   color: ColorResources.COLOR_PRIMARY,
+            // ),
+            // SizedBox(
+            //   height: 5.h,
+            // ),
             Text(
               'Start Date',
               style: popinsRegular.copyWith(fontSize: 11.sp, color: Color(0xFF3E3E3E)),
@@ -680,14 +690,14 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Icons.calendar_today_sharp,
-              size: 20.0,
-              color: ColorResources.COLOR_PRIMARY,
-            ),
-            SizedBox(
-              height: 5.h,
-            ),
+            // Icon(
+            //   Icons.calendar_today_outlined,
+            //   size: 20.0,
+            //   color: ColorResources.COLOR_PRIMARY,
+            // ),
+            // SizedBox(
+            //   height: 5.h,
+            // ),
             Text(
               'End Date',
               style: popinsRegular.copyWith(fontSize: 11.sp, color: Color(0xFF3E3E3E)),
@@ -724,7 +734,7 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                       margin: EdgeInsets.only(right: 10.w),
                       child: Center(
                         child: Icon(
-                          Icons.calendar_today_sharp,
+                          Icons.hourglass_empty,
                           size: 20.0,
                           color: ColorResources.COLOR_PRIMARY,
                         ),
@@ -739,15 +749,15 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                 height: 10.h,
               ),
               Text(
-                'The number of times your data will be acessed, based on your acceptance of this cansent request.',
-                style: popinsRegular.copyWith(fontSize: 14.sp, color: Colors.black54),
-              ),
-              SizedBox(
-                height: 50.h,
-              ),
-              Text(
                 '${consentsData.frequencyValue} times (once a ${consentsData.frequencyUnit!.toString().toLowerCase()})',
                 style: popinsMedium.copyWith(fontSize: 14.sp, color: Color(0xFF3E3E3E)),
+              ),
+              SizedBox(
+                height: 40.h,
+              ),
+              Text(
+                'The number of times your data will be acessed, based on your acceptance of the cansent request.',
+                style: popinsRegular.copyWith(fontSize: 14.sp, color: Colors.black54),
               ),
             ],
           ),
@@ -778,7 +788,7 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                       margin: EdgeInsets.only(right: 10.w),
                       child: Center(
                         child: Icon(
-                          Icons.calendar_today_sharp,
+                          Icons.delete_outline_rounded,
                           size: 20.0,
                           color: ColorResources.COLOR_PRIMARY,
                         ),
@@ -793,15 +803,16 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                 height: 10.h,
               ),
               Text(
-                'After this duration, you data is expected to be deleted by party',
-                style: popinsRegular.copyWith(fontSize: 14.sp, color: Colors.black54),
+                '${consentsData.dataLifeValue} ${consentsData.dataLifeUnit.toString().toLowerCase()}${(consentsData.dataLifeValue ?? 0) > 1 ? 's' : ''} from date of fetch',
+                style: popinsMedium.copyWith(fontSize: 14.sp, color: Color(0xFF3E3E3E)),
               ),
               SizedBox(
-                height: 50.h,
+                height: 40.h,
               ),
               Text(
-                '${consentsData.dataLifeValue} ${consentsData.dataLifeUnit.toString().toLowerCase()} from date of fetch',
-                style: popinsMedium.copyWith(fontSize: 14.sp, color: Color(0xFF3E3E3E)),
+                'After this duration, your data will not be used by ${'<name>'}',
+                //'After this duration, you data is expected to be deleted by party',
+                style: popinsRegular.copyWith(fontSize: 14.sp, color: Colors.black54),
               ),
             ],
           ),
@@ -832,13 +843,13 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                       margin: EdgeInsets.only(right: 10.w),
                       child: Center(
                         child: Icon(
-                          Icons.calendar_today_sharp,
+                          Icons.calendar_today_outlined,
                           size: 20.0,
                           color: ColorResources.COLOR_PRIMARY,
                         ),
                       )),
                   Text(
-                    'Your consent will be valid',
+                    'Your consent will be valid from',
                     style: popinsMedium.copyWith(fontSize: 16.sp),
                   ),
                 ],
@@ -846,16 +857,16 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
               SizedBox(
                 height: 10.h,
               ),
-              Text(
-                'The time period during which this party is allowed by you to get data. Any data requested placed after this period automatically be rejected.',
-                style: popinsRegular.copyWith(fontSize: 14.sp, color: Colors.black54),
-              ),
-              SizedBox(
-                height: 50.h,
-              ),
               getDates(
                   startDate: DateFormat('dd MMM yyyy').format(DateTime.parse(consentsData.startTime ?? '9999-01-01')),
                   endDate: DateFormat('dd MMM yyyy').format(DateTime.parse(consentsData.expireTime ?? '9999-01-01'))),
+              SizedBox(
+                height: 40.h,
+              ),
+              Text(
+                'The time period during which <name of party> is permitted to get your data. Any data request placed after this period will be rejected.',
+                style: popinsRegular.copyWith(fontSize: 14.sp, color: Colors.black54),
+              ),
             ],
           ),
         ),

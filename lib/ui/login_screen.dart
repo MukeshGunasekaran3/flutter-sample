@@ -17,6 +17,7 @@ import 'package:onemoney_sdk/utils/app_sizes.dart';
 import 'package:onemoney_sdk/utils/color_resources.dart';
 import 'package:onemoney_sdk/utils/images.dart';
 import 'package:onemoney_sdk/utils/size_utils/size_extension.dart';
+import 'package:onemoney_sdk/utils/size_utils/string_utils.dart';
 import 'package:onemoney_sdk/utils/styles.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -93,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: EdgeInsets.only(top: 5.h, left: 18.w),
                   child: Text(
-                    'Welcome back!',
+                    'Welcome Back!',
                     style: popinsBold.copyWith(
                       fontSize: SizeConfig.TEXT_SIZE_HEADING,
                     ),
@@ -101,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 5.h, left: 18.w),
-                  child: getRegularText('We are happy you are here. Please login to manage your consents and financial data.', fontsize: SizeConfig.TEXT_SIZE_SUB_HEADING_, fontcolor: Colors.grey),
+                  child: getRegularText('Onemoney is at your service! Please login to manage your consents and financial data.', fontsize: SizeConfig.TEXT_SIZE_SUB_HEADING_, fontcolor: Colors.grey),
                 ),
                 SizedBox(
                   height: 20.h,
@@ -282,13 +283,18 @@ class _LoginScreenState extends State<LoginScreen> {
                               //   ));
                               //   return;
                               // }
-
-                              _bloc!.loginUser(
-                                  mobileNumber: "${_mobileNumberController.text}",
-                                  context: context,
-                                  completion: (status) {
-                                    pushToOtpScreens(status);
-                                  });
+                              if (isStringEmpty(_mobileNumberController.text.trim())) {
+                                _showErrorMessage("Please enter mobile number.");
+                              } else if (validateMobile(_mobileNumberController.text.trim()) == false) {
+                                _showErrorMessage("Please enter valid mobile number.");
+                              } else {
+                                _bloc!.loginUser(
+                                    mobileNumber: "${_mobileNumberController.text}",
+                                    context: context,
+                                    completion: (status) {
+                                      pushToOtpScreens(status);
+                                    });
+                              }
 
                               // debugPrint("mobile number ${_mobileNumberController.text}");
                               // debugPrint("mobile number ${_pinController.text}");

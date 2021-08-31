@@ -405,7 +405,66 @@ class DiscoverAccounts extends Bloc {
     }
   }
 
-  verifyOTPToLinkAccount({required String? referenceNumber, required String? authToken, required BuildContext context}) async {
+  resendOTPToBilkLinkAccount({required List<Account>? accounts, required BuildContext context, required Function(AuthSessionParameters status) completion}) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
+      AppDialogs.showError(context, "No internet connection");
+      return;
+    }
+    // disAccountSink.add(Response.loading("in Progress"));
+    Loader.showFullScreenLoader(globalKey.currentState!.overlay!.context);
+    disAccountLoadingSink.add(true);
+    try {
+      dynamic status;
+
+      await onemoney.sendOtpToBulkLinkAccount(
+          accounts: accounts,
+          onSuccess: (value) async {
+            status = value;
+          },
+          onFailure: (value) async {
+            status = value;
+          });
+
+      if (_isStreaming) {
+        Loader.hideProgressDialog();
+        if (status is AuthSessionParameters) {
+          disAccountLoadingSink.add(false);
+          // disAccountSink.add(Response.completed(status));
+          Fluttertoast.showToast(
+            msg: "Otp sent on registered number",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.black54,
+            textColor: Colors.white,
+            fontSize: 14.0,
+          );
+          completion(status);
+        } else {
+          if (status is OnemoneyError) {
+            disAccountLoadingSink.add(false);
+            disAccountSink.add(Response.error(status.errorMessage));
+          } else {
+            disAccountLoadingSink.add(false);
+            disAccountSink.add(Response.error("something wrong"));
+          }
+        }
+      }
+    } catch (e) {
+      Loader.hideProgressDialog();
+      disAccountLoadingSink.add(false);
+      if (_isStreaming) disAccountSink.add(Response.error(e.toString()));
+    }
+  }
+
+  verifyOTPToLinkAccount({
+    required String? referenceNumber,
+    required String? authToken,
+    required BuildContext context,
+    required Function onFailure,
+    required Function onSuccess,
+  }) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
@@ -432,20 +491,24 @@ class DiscoverAccounts extends Bloc {
           // disAccountSink.add(Response.completed(status.toString()));
           disAccountLoadingSink.add(false);
           if (status) {
-            await showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20),
+            onSuccess();
+            Future.delayed(Duration(milliseconds: 500), () async {
+              Navigator.pop(context);
+              await showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                   ),
-                ),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                builder: (context) {
-                  return AccountLinkSccBottomSheet();
-                });
-            // afterSuccessFullLined();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentDetailsScreen()));
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  builder: (context) {
+                    return AccountLinkSccBottomSheet();
+                  });
+              // afterSuccessFullLined();
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentDetailsScreen()));
+            });
           } else {
             Fluttertoast.showToast(
               msg: "Oops!! Otp verification failed ",
@@ -456,6 +519,7 @@ class DiscoverAccounts extends Bloc {
               textColor: Colors.white,
               fontSize: 14.0,
             );
+            onFailure('invalid otp provided');
             // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             //   content: Text("Oops!! Otp verification failed "),
             //   backgroundColor: Colors.redAccent,
@@ -465,6 +529,7 @@ class DiscoverAccounts extends Bloc {
         } else {
           if (status is OnemoneyError) {
             disAccountSink.add(Response.error(status.errorMessage));
+            onFailure(status.errorMessage);
           } else {
             disAccountSink.add(Response.error("something wrong"));
           }

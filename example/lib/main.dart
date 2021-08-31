@@ -30,8 +30,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await OnemoneySdk.platformVersion ?? 'Unknown platform version';
+      platformVersion = await OnemoneySdk.platformVersion ?? 'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -50,11 +49,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: globalKey,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('One-Money example app'),
-        ),
-        body: Center(
+        color: Colors.white,
+      home: Builder(
+        builder: (context) => Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -65,24 +62,22 @@ class _MyAppState extends State<MyApp> {
               ),
               Builder(
                 builder: (cont) => TextButton(
-                  style: TextButton.styleFrom(
-                      primary: Colors.white, backgroundColor: Colors.blue),
+                  style: TextButton.styleFrom(primary: Colors.white, backgroundColor: Colors.blue),
                   onPressed: () {
                     Onemoney().init(
                       appIdentifier: '[]',
                       //  baseUrl: 'https://api-sandbox.onemoney.in/',
                       baseUrl: 'api-sandbox.onemoney.in',
-                      clientId:
-                          'fp_test_d4c1ccc11767f14695349f360f915adcdbda16c1',
-                      clientSecret:
-                          'f8d0841160d7781e4ecf33f74070677a0b8870e94a6ecf31533a9409415eef87895d9459',
+                      clientId: 'fp_test_d4c1ccc11767f14695349f360f915adcdbda16c1',
+                      clientSecret: 'f8d0841160d7781e4ecf33f74070677a0b8870e94a6ecf31533a9409415eef87895d9459',
                       organisationId: 'AWE0258',
                       vua: "9561855723",
-                      consentId: "0f80e937-cae7-4ce7-8071-d386bd894f61",
+                      appName: "Universal fintech",
+                      // consentId: "0e57466b-ee71-4bfd-b51f-1b19e8d675ab",
                       isOTPAuth: true,
                     );
 
-                    OnemoneySdk.openOneMoneySDK(buildContext: cont);
+                    OnemoneySdk.openOneMoneySDK(buildContext: cont,gk: globalKey);
                   },
                   child: Text('Open one-money SDK'),
                 ),

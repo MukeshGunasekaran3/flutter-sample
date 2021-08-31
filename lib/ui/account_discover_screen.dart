@@ -113,7 +113,7 @@ class _AccountDiscoverScreenState extends State<AccountDiscoverScreen> {
                       height: 15.h,
                     ),
                     Text(
-                      'You are almost done, please choose the accounts you would like to link',
+                      'Almost there! Select the account you wish to link.',
                       style: popinsRegular.copyWith(color: Colors.black, fontSize: 16.sp),
                     ),
                     SizedBox(

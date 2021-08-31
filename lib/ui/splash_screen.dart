@@ -16,6 +16,7 @@ import 'package:onemoney_sdk/utils/size_utils/size_extension.dart';
 import 'package:onemoney_sdk/utils/size_utils/string_utils.dart';
 
 import 'custom_button.dart';
+import 'one_money_id_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,9 +25,7 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  final _vuaController = TextEditingController(text: "9561855723");
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   AnimationController? _controller;
   Animation? _animation;
 
@@ -37,8 +36,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
 
     _bloc = VerifyVuaBloc();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _controller = AnimationController(vsync: this, duration: Duration(seconds: 1));
 
     _animation = Tween<double>(
       begin: 50,
@@ -55,18 +53,19 @@ class _SplashScreenState extends State<SplashScreen>
         //     builder: (BuildContext context) => LoginScreen()));
         // Navigator.of(context).pushReplacement(MaterialPageRoute(
         //     builder: (BuildContext context) => ConsentDetailsScreen()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => OneMoneyIDScreen()));
       }
     });
     _controller!.forward();
 
-    WidgetsBinding.instance!.addPostFrameCallback(
-      (_) => setState(() {
-        _bloc!.verifyVua(
-          mobileNumber: _bloc!.onemoney.vua ?? "",
-          context: context,
-        );
-      }),
-    );
+    // WidgetsBinding.instance!.addPostFrameCallback(
+    //   (_) => setState(() {
+    //     _bloc!.verifyVua(
+    //       mobileNumber: _bloc!.onemoney.vua ?? "",
+    //       context: context,
+    //     );
+    //   }),
+    // );
   }
 
   @override
@@ -79,8 +78,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return SizeUtilInit(
-      designSize: Size(MediaQuery.of(context).size.width,
-          MediaQuery.of(context).size.height),
+      designSize: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
       builder: () => Scaffold(
           body: Center(
         child: AnimatedBuilder(

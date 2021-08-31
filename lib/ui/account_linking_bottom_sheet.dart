@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:onemoney/onemoney.dart';
 import 'package:onemoney_sdk/bloc/discover_accounts.dart';
@@ -11,7 +13,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 
 import 'consent_details_screen.dart';
 
-class AccountLinkingBottomSheet extends StatelessWidget {
+class AccountLinkingBottomSheet extends StatefulWidget {
   final List<Account> accountList;
   AuthSessionParameters authSessionpara;
   final DiscoverAccounts bloc;
@@ -19,6 +21,29 @@ class AccountLinkingBottomSheet extends StatelessWidget {
   final String bankName;
 
   AccountLinkingBottomSheet({Key? key, required this.authSessionpara, required this.bloc, required this.scaffoldKey, required this.bankName, required this.accountList}) : super(key: key);
+
+  @override
+  _AccountLinkingBottomSheetState createState() => _AccountLinkingBottomSheetState();
+}
+
+class _AccountLinkingBottomSheetState extends State<AccountLinkingBottomSheet> {
+  bool hasError = false;
+  Color boxColor = ColorResources.COLOR_PRIMARY;
+  String errorText = "";
+
+  StreamController<ErrorAnimationType>? errorController;
+
+  @override
+  void initState() {
+    errorController = StreamController<ErrorAnimationType>();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    errorController?.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +61,7 @@ class AccountLinkingBottomSheet extends StatelessWidget {
             SizedBox(
               height: 10.h,
             ),
-            getRegularText('For $bankName Account', fontcolor: Colors.black54, fontsize: 19.sp),
+            getRegularText('For ${widget.bankName} Account', fontcolor: Colors.black54, fontsize: 19.sp),
             SizedBox(
               height: 50.h,
             ),
@@ -52,26 +77,46 @@ class AccountLinkingBottomSheet extends StatelessWidget {
               blinkWhenObscuring: true,
               animationType: AnimationType.fade,
               pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderWidth: 0.9,
-                  activeColor: ColorResources.COLOR_PRIMARY,
-                  inactiveFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                  inactiveColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                  borderRadius: BorderRadius.circular(5),
-                  fieldWidth: 50.w,
-                  fieldHeight: 55.h,
-                  activeFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                  selectedFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                  selectedColor: ColorResources.COLOR_PRIMARY),
+                shape: PinCodeFieldShape.box,
+                borderWidth: 0.9,
+                activeColor: boxColor, //hasError ? Colors.redAccent : ColorResources.COLOR_PRIMARY,
+                inactiveFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                inactiveColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                borderRadius: BorderRadius.circular(5),
+                fieldWidth: 50.w,
+                fieldHeight: 55.h,
+                activeFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                selectedFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                selectedColor: boxColor, //hasError ? Colors.redAccent : ColorResources.COLOR_PRIMARY
+              ),
               cursorColor: Colors.grey,
               animationDuration: Duration(milliseconds: 300),
               enableActiveFill: true,
+              errorAnimationController: errorController,
               //  errorAnimationController: errorController,
               // controller: textEditingController,
               keyboardType: TextInputType.number,
               onCompleted: (v) {
-                Navigator.pop(context);
-                bloc.verifyOTPToLinkAccount(referenceNumber: authSessionpara.refNumber, authToken: v, context: scaffoldKey.currentContext!);
+                // Navigator.pop(context);
+                widget.bloc.verifyOTPToLinkAccount(
+                  referenceNumber: widget.authSessionpara.refNumber,
+                  authToken: v,
+                  context: widget.scaffoldKey.currentContext!,
+                  onSuccess: () {
+                    boxColor = Colors.green;
+                    errorText = "";
+                    setState(() {});
+                  },
+                  onFailure: (errorMessage) {
+                    if (errorMessage == "invalid otp provided") {
+                      errorController?.add(ErrorAnimationType.shake);
+                      hasError = true;
+                      boxColor = Colors.redAccent;
+                      errorText = errorMessage;
+                      setState(() {});
+                    }
+                  },
+                );
               },
               onChanged: (value) {
                 print(value);
@@ -80,16 +125,23 @@ class AccountLinkingBottomSheet extends StatelessWidget {
                 // });
               },
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0.0),
+              child: Text(
+                hasError ? errorText : "",
+                style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.w400),
+              ),
+            ),
             SizedBox(
               height: 40.h,
             ),
             InkWell(
               onTap: () {
-                bloc.sendOTPToBilkLinkAccount(
-                    accounts: accountList,
+                widget.bloc.resendOTPToBilkLinkAccount(
+                    accounts: widget.accountList,
                     context: context,
                     completion: (status) {
-                      this.authSessionpara = status;
+                      widget.authSessionpara = status;
                     });
               },
               child: Align(

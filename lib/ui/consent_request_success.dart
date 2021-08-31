@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:onemoney_sdk/bloc/base_bloc.dart';
 import 'package:onemoney_sdk/ui/consent_details_screen.dart';
 import 'package:onemoney_sdk/ui/link_account_screen.dart';
 import 'package:onemoney_sdk/utils/CommonWidget.dart';
@@ -22,7 +23,7 @@ class ConsentRequestScreen extends StatefulWidget {
 class _ConsentRequestScreenState extends State<ConsentRequestScreen> {
   late Timer _timer;
   int _start = 0;
-
+  Bloc _bloc = Bloc();
   @override
   void initState() {
     super.initState();
@@ -89,7 +90,7 @@ class _ConsentRequestScreenState extends State<ConsentRequestScreen> {
           ),
           SizedBox(height: 18.h),
           getRegularText(
-            'Please wait, we are redirecting you to HDFC Fintech App. Don’t press back while processing',
+            'Please wait while we redirect you to ${_bloc.onemoney.appName}’s app. Do not press back.',
             fontcolor: Colors.black,
             fontsize: 12.sp,
             textAlign: TextAlign.center,

@@ -21,21 +21,7 @@ packages:
       name: cached_network_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
-  cached_network_image_platform_interface:
-    dependency: transitive
-    description:
-      name: cached_network_image_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
-  cached_network_image_web:
-    dependency: transitive
-    description:
-      name: cached_network_image_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
+    version: "3.0.0"
   characters:
     dependency: transitive
     description:
@@ -162,7 +148,7 @@ packages:
       name: fluttertoast
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "8.0.8"
+    version: "8.0.7"
   google_fonts:
     dependency: "direct main"
     description:
@@ -222,7 +208,7 @@ packages:
   onemoney:
     dependency: "direct main"
     description:
-      path: "/Users/jeckymodi/Desktop/Projects/OnemoneySdk/onemoney-headless-sdk"
+      path: "D:\\ONEMONEY_FLUTTER\\ONEMONEY_HEADLESS_AWS"
       relative: false
     source: path
     version: "1.0.0"
@@ -246,14 +232,14 @@ packages:
       name: path_provider_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.0"
   path_provider_macos:
     dependency: transitive
     description:
       name: path_provider_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.0"
   path_provider_platform_interface:
     dependency: transitive
     description:
@@ -267,7 +253,7 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.1"
   pedantic:
     dependency: transitive
     description:
@@ -288,7 +274,7 @@ packages:
       name: pin_code_fields
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.3.0"
+    version: "7.2.0"
   platform:
     dependency: transitive
     description:
@@ -309,7 +295,7 @@ packages:
       name: process
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.3"
+    version: "4.2.1"
   rxdart:
     dependency: transitive
     description:
@@ -330,14 +316,14 @@ packages:
       name: shared_preferences_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.0"
   shared_preferences_macos:
     dependency: transitive
     description:
       name: shared_preferences_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.0"
   shared_preferences_platform_interface:
     dependency: transitive
     description:
@@ -351,14 +337,14 @@ packages:
       name: shared_preferences_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.0"
   shared_preferences_windows:
     dependency: transitive
     description:
       name: shared_preferences_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.0"
   sky_engine:
     dependency: transitive
     description: flutter

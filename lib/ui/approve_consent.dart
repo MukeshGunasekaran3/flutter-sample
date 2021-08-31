@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -18,8 +20,9 @@ class ApproveConsentBottomSheet extends StatefulWidget {
   final String consentHandle;
   final List<Account>? account;
   final bool isApprove;
+  final Function onResend;
 
-  const ApproveConsentBottomSheet({Key? key, required this.consentHandle, required this.account, required this.isApprove}) : super(key: key);
+  const ApproveConsentBottomSheet({Key? key, required this.consentHandle, required this.account, required this.isApprove, required this.onResend}) : super(key: key);
 
   @override
   _ApproveConsentBottomSheetState createState() => _ApproveConsentBottomSheetState();
@@ -29,15 +32,24 @@ class _ApproveConsentBottomSheetState extends State<ApproveConsentBottomSheet> {
   final _otpController = TextEditingController();
   ConsetDetailsBloc? _bloc;
 
+  bool hasError = false;
+  String errorText = "";
+  StreamController<ErrorAnimationType>? errorController;
+  Color boxColor = ColorResources.COLOR_PRIMARY;
+
   @override
   void initState() {
     super.initState();
+
+    errorController = StreamController<ErrorAnimationType>();
     _bloc = ConsetDetailsBloc();
   }
 
   @override
   void dispose() {
     // _otpController.dispose();
+
+    errorController?.close();
     _bloc!.dispose();
     super.dispose();
   }
@@ -96,7 +108,8 @@ class _ApproveConsentBottomSheetState extends State<ApproveConsentBottomSheet> {
                   }
                 }
 
-                return Stack(
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     PinCodeTextField(
                       appContext: context,
@@ -106,28 +119,67 @@ class _ApproveConsentBottomSheetState extends State<ApproveConsentBottomSheet> {
                       blinkWhenObscuring: true,
                       animationType: AnimationType.fade,
                       pinTheme: PinTheme(
-                          shape: PinCodeFieldShape.box,
-                          borderWidth: 0.9,
-                          activeColor: ColorResources.COLOR_PRIMARY,
-                          inactiveFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                          inactiveColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                          borderRadius: BorderRadius.circular(5),
-                          fieldWidth: 50.w,
-                          fieldHeight: 55.h,
-                          activeFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                          selectedFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
-                          selectedColor: ColorResources.COLOR_PRIMARY),
+                        shape: PinCodeFieldShape.box,
+                        borderWidth: 0.9,
+                        activeColor: boxColor, //hasError ? Colors.redAccent : ColorResources.COLOR_PRIMARY,
+                        inactiveFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                        inactiveColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                        borderRadius: BorderRadius.circular(5),
+                        fieldWidth: 50.w,
+                        fieldHeight: 55.h,
+                        activeFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                        selectedFillColor: ColorResources.TEXT_FIELD_BACKGROUND,
+                        selectedColor: boxColor, //hasError ? Colors.redAccent : ColorResources.COLOR_PRIMARY
+                      ),
                       cursorColor: Colors.grey,
                       animationDuration: Duration(milliseconds: 300),
                       enableActiveFill: true,
+                      errorAnimationController: errorController,
                       //  errorAnimationController: errorController,
                       controller: _otpController,
                       keyboardType: TextInputType.number,
                       onCompleted: (v) {
                         if (widget.isApprove) {
-                          _bloc!.approveConsent(context: context, consentHandles: widget.consentHandle, otp: _otpController.text.toString(), accounts: widget.account);
+                          _bloc!.approveConsent(
+                            context: context,
+                            consentHandles: widget.consentHandle,
+                            otp: _otpController.text.toString(),
+                            accounts: widget.account,
+                            onSuccess: () {
+                              boxColor = Colors.green;
+                              errorText = "";
+                              setState(() {});
+                            },
+                            onFailure: (errorMessage) {
+                              if (errorMessage == "invalid otp provided" || errorMessage == "Make sure your OTP is correct") {
+                                errorController?.add(ErrorAnimationType.shake);
+                                hasError = true;
+                                boxColor = Colors.redAccent;
+                                errorText = errorMessage;
+                                setState(() {});
+                              }
+                            },
+                          );
                         } else {
-                          _bloc!.rejectConsent(context: context, consentHandles: widget.consentHandle, otp: _otpController.text.toString());
+                          _bloc!.rejectConsent(
+                            context: context,
+                            consentHandles: widget.consentHandle,
+                            otp: _otpController.text.toString(),
+                            onSuccess: () {
+                              boxColor = Colors.green;
+                              errorText = "";
+                              setState(() {});
+                            },
+                            onFailure: (errorMessage) {
+                              if (errorMessage == "invalid otp provided" || errorMessage == "Make sure your OTP is correct") {
+                                errorController?.add(ErrorAnimationType.shake);
+                                hasError = true;
+                                boxColor = Colors.redAccent;
+                                errorText = errorMessage;
+                                setState(() {});
+                              }
+                            },
+                          );
                         }
                       },
                       onChanged: (value) {
@@ -136,6 +188,13 @@ class _ApproveConsentBottomSheetState extends State<ApproveConsentBottomSheet> {
                         //   //  currentText = value;
                         // });
                       },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                      child: Text(
+                        hasError ? errorText : "",
+                        style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.w400),
+                      ),
                     ),
                   ],
                 );
@@ -156,6 +215,7 @@ class _ApproveConsentBottomSheetState extends State<ApproveConsentBottomSheet> {
                       style: TextStyle(fontWeight: FontWeight.bold, color: ColorResources.COLOR_PRIMARY),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
+                          widget.onResend();
                           debugPrint("on resend tap");
                         }),
                 ],

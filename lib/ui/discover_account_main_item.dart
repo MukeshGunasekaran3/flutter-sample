@@ -181,7 +181,7 @@ class _DiscoverAccountMainItemState extends State<DiscoverAccountMainItem> {
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                 builder: (context) {
                                   return AccountLinkingBottomSheet(
-                                    bankName: this.widget.bankAccountList[0].data?.fipId ?? "Bank",
+                                    bankName: this.widget.fipModel?.fipName ?? "Bank",
                                     authSessionpara: status,
                                     bloc: widget.bloc,
                                     scaffoldKey: widget.scaffoldKey,

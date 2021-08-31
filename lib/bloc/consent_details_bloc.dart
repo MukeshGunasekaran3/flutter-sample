@@ -21,29 +21,21 @@ class ConsetDetailsBloc extends Bloc {
   late StreamController<Response<dynamic>> _sendOtpToUpdateController;
   late bool _isStreaming;
 
-  StreamSink<Response<dynamic>> get consentDetailsSink =>
-      _consentDetailsController.sink;
+  StreamSink<Response<dynamic>> get consentDetailsSink => _consentDetailsController.sink;
 
-  Stream<Response<dynamic>> get consentDetailsStream =>
-      _consentDetailsController.stream;
+  Stream<Response<dynamic>> get consentDetailsStream => _consentDetailsController.stream;
 
-  StreamSink<Response<dynamic>> get approveConsetSink =>
-      _approveConsetController.sink;
+  StreamSink<Response<dynamic>> get approveConsetSink => _approveConsetController.sink;
 
-  Stream<Response<dynamic>> get approveConsetStream =>
-      _approveConsetController.stream;
+  Stream<Response<dynamic>> get approveConsetStream => _approveConsetController.stream;
 
-  StreamSink<Response<dynamic>> get rejectConsetSink =>
-      _rejectConsetController.sink;
+  StreamSink<Response<dynamic>> get rejectConsetSink => _rejectConsetController.sink;
 
-  Stream<Response<dynamic>> get rejectConsetStream =>
-      _rejectConsetController.stream;
+  Stream<Response<dynamic>> get rejectConsetStream => _rejectConsetController.stream;
 
-  StreamSink<Response<dynamic>> get sendOtpToUpdateConsentSink =>
-      _sendOtpToUpdateController.sink;
+  StreamSink<Response<dynamic>> get sendOtpToUpdateConsentSink => _sendOtpToUpdateController.sink;
 
-  Stream<Response<dynamic>> get sendOtpToUpdateConsentStream =>
-      _sendOtpToUpdateController.stream;
+  Stream<Response<dynamic>> get sendOtpToUpdateConsentStream => _sendOtpToUpdateController.stream;
 
   ConsetDetailsBloc() : super() {
     _consentDetailsController = StreamController<Response<dynamic>>();
@@ -63,8 +55,7 @@ class ConsetDetailsBloc extends Bloc {
 
   Future<dynamic> getFipListOtherMethod(BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -131,8 +122,7 @@ class ConsetDetailsBloc extends Bloc {
 
   Future<dynamic> getUserDashboardOtherMethod(BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -202,8 +192,7 @@ class ConsetDetailsBloc extends Bloc {
 
   getUserDashboard(BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -233,12 +222,9 @@ class ConsetDetailsBloc extends Bloc {
     }
   }
 
-  getConsentDetails(
-      {required List<String>? consentHandles,
-      required BuildContext context}) async {
+  getConsentDetails({required List<String>? consentHandles, required BuildContext context}) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -272,11 +258,9 @@ class ConsetDetailsBloc extends Bloc {
     }
   }
 
-  getConsentDetailsSingleWithoutConsentHandle(
-      {required Function completion, required BuildContext context}) async {
+  getConsentDetailsSingleWithoutConsentHandle({required Function completion, required BuildContext context}) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -316,13 +300,9 @@ class ConsetDetailsBloc extends Bloc {
     }
   }
 
-  getConsentDetailsSingle(
-      {required String consentHandle,
-      required Function completion,
-      required BuildContext context}) async {
+  getConsentDetailsSingle({required String consentHandle, required Function completion, required BuildContext context}) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -362,8 +342,7 @@ class ConsetDetailsBloc extends Bloc {
   //get all linked accounts
   getLinkedAccounts(context, Function(List<Account> status) completion) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -387,8 +366,7 @@ class ConsetDetailsBloc extends Bloc {
           if (status is OnemoneyError) {
             // disAccountSink.add(Response.error(status.errorMessage));
 
-            AppDialogs.showErrorWithRetry(context, status.errorMessage,
-                (BuildContext context) {
+            AppDialogs.showErrorWithRetry(context, status.errorMessage, (BuildContext context) {
               Future.delayed(Duration.zero, () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
@@ -400,8 +378,7 @@ class ConsetDetailsBloc extends Bloc {
           } else {
             // disAccountSink.add(Response.error("something wrong"));
 
-            AppDialogs.showErrorWithRetry(context, "something wrong",
-                (BuildContext context) {
+            AppDialogs.showErrorWithRetry(context, "something wrong", (BuildContext context) {
               Future.delayed(Duration.zero, () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
@@ -417,8 +394,7 @@ class ConsetDetailsBloc extends Bloc {
       if (_isStreaming) {
         // disAccountSink.add(Response.error(e.toString()));
 
-        AppDialogs.showErrorWithRetry(context, e.toString(),
-            (BuildContext context) {
+        AppDialogs.showErrorWithRetry(context, e.toString(), (BuildContext context) {
           Future.delayed(Duration.zero, () {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (BuildContext context) => LinkAccountScreen(),
@@ -429,14 +405,16 @@ class ConsetDetailsBloc extends Bloc {
     }
   }
 
-  approveConsent(
-      {required BuildContext context,
-      required String consentHandles,
-      required String otp,
-      required List<Account>? accounts}) async {
+  approveConsent({
+    required BuildContext context,
+    required String consentHandles,
+    required String otp,
+    required List<Account>? accounts,
+    required Function onFailure,
+    required Function onSuccess,
+  }) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -445,8 +423,7 @@ class ConsetDetailsBloc extends Bloc {
     print(otp);
     print(accounts);
     if (accounts?.isEmpty ?? false) {
-      approveConsetSink
-          .add(Response.error("Make sure at least one account is selected"));
+      approveConsetSink.add(Response.error("Make sure at least one account is selected"));
       return;
     }
     approveConsetSink.add(Response.loading("in Progress"));
@@ -470,20 +447,20 @@ class ConsetDetailsBloc extends Bloc {
         if (status is bool) {
           if (status) {
             approveConsetSink.add(Response.completed(status.toString()));
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => ConsentRequestScreen(
-                        description: 'Consent Request Approved Successfully')));
+            onSuccess();
+            Future.delayed(Duration(milliseconds: 500), () async {
+              Navigator.pop(context);
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentRequestScreen(description: 'Consent Request Approved Successfully')));
+            });
           } else {
-            Navigator.pop(context);
-            approveConsetSink.add(Response.error(
-                "make sure your otp is correct & \naleast one bacnk account requird"));
+            // Navigator.pop(context);
+            approveConsetSink.add(Response.error("make sure your OTP is correct"));
+            onFailure("Make sure your OTP is correct");
           }
         } else {
           if (status is OnemoneyError) {
             approveConsetSink.add(Response.error(status.errorMessage));
+            onFailure(status.errorMessage);
           } else {
             approveConsetSink.add(Response.error("something wrong"));
           }
@@ -494,13 +471,9 @@ class ConsetDetailsBloc extends Bloc {
     }
   }
 
-  approveConsentWithoutAuth(
-      {required BuildContext context,
-      required String consentHandles,
-      required List<Account>? accounts}) async {
+  approveConsentWithoutAuth({required BuildContext context, required String consentHandles, required List<Account>? accounts}) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -527,17 +500,11 @@ class ConsetDetailsBloc extends Bloc {
         Loader.hideProgressDialog();
         if (status is bool) {
           if (status) {
-            sendOtpToUpdateConsentSink
-                .add(Response.completed(status.toString()));
+            sendOtpToUpdateConsentSink.add(Response.completed(status.toString()));
 
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => ConsentRequestScreen(
-                        description: 'Consent Request Approved Successfully')));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentRequestScreen(description: 'Consent Request Approved Successfully')));
           } else {
-            sendOtpToUpdateConsentSink
-                .add(Response.error("something wrong from back"));
+            sendOtpToUpdateConsentSink.add(Response.error("something wrong from back"));
           }
         } else {
           if (status is OnemoneyError) {
@@ -548,18 +515,19 @@ class ConsetDetailsBloc extends Bloc {
         }
       }
     } catch (e) {
-      if (_isStreaming)
-        sendOtpToUpdateConsentSink.add(Response.error(e.toString()));
+      if (_isStreaming) sendOtpToUpdateConsentSink.add(Response.error(e.toString()));
     }
   }
 
-  rejectConsent(
-      {required BuildContext context,
-      required String consentHandles,
-      required String otp}) async {
+  rejectConsent({
+    required BuildContext context,
+    required String consentHandles,
+    required String otp,
+    required Function onFailure,
+    required Function onSuccess,
+  }) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -586,19 +554,19 @@ class ConsetDetailsBloc extends Bloc {
         if (status is bool) {
           if (status) {
             rejectConsetSink.add(Response.completed(status.toString()));
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => ConsentRequestScreen(
-                        description: 'Consent Request Rejected Successfully')));
+            onSuccess();
+            Future.delayed(Duration(milliseconds: 500), () async {
+              Navigator.pop(context);
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentRequestScreen(description: 'Consent Request Rejected Successfully')));
+            });
           } else {
-            rejectConsetSink
-                .add(Response.error("Make sure your otp is correct"));
+            rejectConsetSink.add(Response.error("Make sure your OTP is correct"));
+            onFailure("Make sure your OTP is correct");
           }
         } else {
           if (status is OnemoneyError) {
             rejectConsetSink.add(Response.error(status.errorMessage));
+            onFailure(status.errorMessage);
           } else {
             rejectConsetSink.add(Response.error("something wrong"));
           }
@@ -609,11 +577,9 @@ class ConsetDetailsBloc extends Bloc {
     }
   }
 
-  rejectConsentWithoutAuth(
-      {required BuildContext context, required String consentHandles}) async {
+  rejectConsentWithoutAuth({required BuildContext context, required String consentHandles}) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -637,17 +603,11 @@ class ConsetDetailsBloc extends Bloc {
         Loader.hideProgressDialog();
         if (status is bool) {
           if (status) {
-            sendOtpToUpdateConsentSink
-                .add(Response.completed(status.toString()));
+            sendOtpToUpdateConsentSink.add(Response.completed(status.toString()));
 
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => ConsentRequestScreen(
-                        description: 'Consent Request Rejected Successfully')));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentRequestScreen(description: 'Consent Request Rejected Successfully')));
           } else {
-            sendOtpToUpdateConsentSink
-                .add(Response.error("something wrong from back"));
+            sendOtpToUpdateConsentSink.add(Response.error("something wrong from back"));
           }
         } else {
           if (status is OnemoneyError) {
@@ -658,19 +618,13 @@ class ConsetDetailsBloc extends Bloc {
         }
       }
     } catch (e) {
-      if (_isStreaming)
-        sendOtpToUpdateConsentSink.add(Response.error(e.toString()));
+      if (_isStreaming) sendOtpToUpdateConsentSink.add(Response.error(e.toString()));
     }
   }
 
-  sendOtpForUpdateConsent(
-      {required BuildContext context,
-      required String consentHandle,
-      required List<Account>? account,
-      required bool isApprove}) async {
+  sendOtpForUpdateConsent({required BuildContext context, required String consentHandle, required List<Account>? account, required bool isApprove}) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.mobile &&
-        connectivityResult != ConnectivityResult.wifi) {
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
       AppDialogs.showError(context, "No internet connection");
       return;
     }
@@ -709,9 +663,18 @@ class ConsetDetailsBloc extends Bloc {
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 builder: (context) {
                   return ApproveConsentBottomSheet(
-                      consentHandle: consentHandle,
-                      account: account,
-                      isApprove: isApprove);
+                    consentHandle: consentHandle,
+                    account: account,
+                    isApprove: isApprove,
+                    onResend: () {
+                      reSendOtpForUpdateConsent(
+                        context: context,
+                        consentHandle: consentHandle,
+                        account: account,
+                        isApprove: isApprove,
+                      );
+                    },
+                  );
                 });
             // afterSuccessFullLined();
           } else {
@@ -739,8 +702,76 @@ class ConsetDetailsBloc extends Bloc {
         }
       }
     } catch (e) {
-      if (_isStreaming)
-        sendOtpToUpdateConsentSink.add(Response.error(e.toString()));
+      if (_isStreaming) sendOtpToUpdateConsentSink.add(Response.error(e.toString()));
+    }
+  }
+
+  reSendOtpForUpdateConsent({required BuildContext context, required String consentHandle, required List<Account>? account, required bool isApprove}) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
+      AppDialogs.showError(context, "No internet connection");
+      return;
+    }
+
+    sendOtpToUpdateConsentSink.add(Response.loading("in Progress"));
+    Loader.showFullScreenLoader(globalKey.currentState!.overlay!.context);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var mobileNumber = prefs.getString("registereNumber");
+    try {
+      dynamic status;
+
+      await onemoney.sendOtpToUpdateConsent(
+          actionType: "CONSENT_CONFIRMED",
+          identifierValue: mobileNumber,
+          identifierType: "MOBILE",
+          onSuccess: (value) async {
+            //OTP Reference
+            status = value;
+          },
+          onFailure: (value) async {
+            status = value;
+          });
+
+      if (_isStreaming) {
+        Loader.hideProgressDialog();
+        if (status is bool) {
+          if (status) {
+            // afterSuccessFullLined();
+            Fluttertoast.showToast(
+              msg: "Otp sent on ${mobileNumber}",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.black54,
+              textColor: Colors.white,
+              fontSize: 14.0,
+            );
+          } else {
+            Fluttertoast.showToast(
+              msg: "Oops!! Otp verification failed ",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.black54,
+              textColor: Colors.white,
+              fontSize: 14.0,
+            );
+            // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //   content: Text("Oops!! Otp verification failed "),
+            //   backgroundColor: Colors.redAccent,
+            // ));
+          }
+          sendOtpToUpdateConsentSink.add(Response.completed(status.toString()));
+        } else {
+          if (status is OnemoneyError) {
+            sendOtpToUpdateConsentSink.add(Response.error(status.errorMessage));
+          } else {
+            sendOtpToUpdateConsentSink.add(Response.error("something wrong"));
+          }
+        }
+      }
+    } catch (e) {
+      if (_isStreaming) sendOtpToUpdateConsentSink.add(Response.error(e.toString()));
     }
   }
 }

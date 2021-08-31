@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,6 +12,7 @@ import 'package:onemoney_sdk/ui/fianatial_instituation_item.dart';
 import 'package:onemoney_sdk/ui/identifire_details_screen.dart';
 import 'package:onemoney_sdk/utils/CommonWidget.dart';
 import 'package:onemoney_sdk/utils/Loader.dart';
+import 'package:onemoney_sdk/utils/app_dialogs.dart';
 import 'package:onemoney_sdk/utils/color_resources.dart';
 import 'package:onemoney_sdk/utils/size_utils/size_extension.dart';
 import 'package:onemoney_sdk/utils/styles.dart';
@@ -99,7 +101,14 @@ class _FinancialInstitutionScreenState extends State<FinancialInstitutionScreen>
 
                             break;
                         }
-                        fipList = (snapshot.data!.data as FipList).fipList ?? [];
+                        if (snapshot.data!.data == null) {
+                          return Container(
+                            child: Center(
+                              child: Text(snapshot.data?.message ?? 'Something wrong!'),
+                            ),
+                          );
+                        }
+                        fipList = (snapshot.data?.data ?? null as FipList)?.fipList ?? [];
                         if (searchText != '' && fipList.isNotEmpty) {
                           fipList = fipList.where((element) => element.fipName?.toLowerCase().contains(searchText.toLowerCase()) ?? false).toList();
                         }
@@ -122,7 +131,7 @@ class _FinancialInstitutionScreenState extends State<FinancialInstitutionScreen>
                                 height: 15.h,
                               ),
                               Text(
-                                'Select financial institution that you have accounts',
+                                'Select financial institution where you have accounts.',
                                 style: popinsRegular.copyWith(color: Colors.black, fontSize: 16.sp),
                               ),
                               SizedBox(
@@ -199,9 +208,14 @@ class _FinancialInstitutionScreenState extends State<FinancialInstitutionScreen>
                     padding: EdgeInsets.only(bottom: 20.h),
                     child: CustomButton(
                       buttonText: "Continue",
-                      onTap: () {
+                      onTap: () async {
                         if (selectedFip.isEmpty) {
                           _showErrorMessage("select at least one");
+                          return;
+                        }
+                        var connectivityResult = await (Connectivity().checkConnectivity());
+                        if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
+                          AppDialogs.showError(context, "No internet connection");
                           return;
                         }
                         Navigator.of(context).push(MaterialPageRoute(

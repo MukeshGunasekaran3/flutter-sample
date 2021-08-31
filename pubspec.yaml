@@ -21,12 +21,9 @@ dependencies:
   intl: ^0.17.0
   collection: ^1.15.0
   fluttertoast: ^8.0.7
-  connectivity: any
+  connectivity: ^3.0.6
   onemoney:
-    path: /Users/jeckymodi/Desktop/Projects/OnemoneySdk/onemoney-headless-sdk
-#    git:
-#      url: https://ajayg007:6sy3vT4qsLgPseqkUWyc@gitlab.com/mayurfegade/onemoney-headless-sdk.git
-#      ref: headless_development
+    path: D:\ONEMONEY_FLUTTER\ONEMONEY_HEADLESS_AWS
 
 dev_dependencies:
   flutter_test:

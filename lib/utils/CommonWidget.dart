@@ -5,7 +5,7 @@ import 'package:onemoney_sdk/utils/size_utils/size_extension.dart';
 
 import 'color_resources.dart';
 
-final GlobalKey<NavigatorState> globalKey = GlobalKey<NavigatorState>();
+ GlobalKey<NavigatorState> globalKey = GlobalKey<NavigatorState>();
 
 getRegularText(String text,
     {double? fontsize,

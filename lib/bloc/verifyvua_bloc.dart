@@ -8,6 +8,7 @@ import 'package:onemoney_sdk/bloc/base_bloc.dart';
 import 'package:onemoney_sdk/model/repsonse.dart';
 import 'package:onemoney_sdk/ui/login_screen.dart';
 import 'package:onemoney_sdk/ui/signup_screen.dart';
+import 'package:onemoney_sdk/utils/CommonWidget.dart';
 import 'package:onemoney_sdk/utils/Loader.dart';
 import 'package:onemoney_sdk/utils/app_dialogs.dart';
 
@@ -45,7 +46,7 @@ class VerifyVuaBloc extends Bloc {
     try {
       dynamic status;
 
-      Loader.showFullScreenLoader(context);
+      Loader.showFullScreenLoader(globalKey.currentState!.overlay!.context);
       await onemoney.verifyVUA(
           mobileNo: mobileNumber,
           onSuccess: (value) async {

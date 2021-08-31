@@ -90,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             Padding(
               padding: EdgeInsets.only(top: 5.h, left: 18.w),
               child: getRegularText(
-                'We are happy you are here. You need to signup to manage your consents and financial data.',
+                'Onemoney is at your service! Please register with your Name and Phone Number below.',
                 fontsize: SizeConfig.TEXT_SIZE_SUB_HEADING_,
                 fontcolor: Colors.grey,
               ),
@@ -302,7 +302,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     padding: EdgeInsets.only(bottom: 50.h),
                     child: Align(
                       child: CustomButton(
-                        buttonText: "Let's Get Started",
+                        buttonText: "Let’s Go!",
                         onTap: () {
                           if (isStringEmpty(_nameController.text.trim())) {
                             _showErrorMessage("Please enter name.");
