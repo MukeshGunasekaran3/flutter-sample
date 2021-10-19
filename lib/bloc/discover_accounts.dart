@@ -464,6 +464,7 @@ class DiscoverAccounts extends Bloc {
     required BuildContext context,
     required Function onFailure,
     required Function onSuccess,
+    required Function afterNewAccountLink,
   }) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
@@ -493,21 +494,33 @@ class DiscoverAccounts extends Bloc {
           if (status) {
             onSuccess();
             Future.delayed(Duration(milliseconds: 500), () async {
+              afterNewAccountLink();
               Navigator.pop(context);
-              await showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  builder: (context) {
-                    return AccountLinkSccBottomSheet();
-                  });
+              // await showModalBottomSheet(
+              //     context: context,
+              //     isScrollControlled: true,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.vertical(
+              //         top: Radius.circular(20),
+              //       ),
+              //     ),
+              //     clipBehavior: Clip.antiAliasWithSaveLayer,
+              //     builder: (context) {
+              //       return AccountLinkSccBottomSheet();
+              //     });
               // afterSuccessFullLined();
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentDetailsScreen()));
+
+              // if (onemoney.isafterSignUp ?? false) {
+              //   Navigator.pop(context);
+              //   Navigator.pop(context);
+              //   Navigator.pop(context);
+              //   // Navigator.pop(context);
+              //   onemoney.sendSessionIdToParents();
+              // } else {
+              //   Navigator.pop(context);
+              //   Navigator.pop(context);
+              //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentDetailsScreen()));
+              // }
             });
           } else {
             Fluttertoast.showToast(
@@ -538,6 +551,20 @@ class DiscoverAccounts extends Bloc {
     } catch (e) {
       Loader.hideProgressDialog();
       if (_isStreaming) disAccountSink.add(Response.error(e.toString()));
+    }
+  }
+
+  void navigateToPatrentAppOrConsentDetailPage(BuildContext context) {
+    if (onemoney.isafterSignUp ?? false) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      // Navigator.pop(context);
+      onemoney.sendSessionIdToParents();
+    } else {
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentDetailsScreen()));
     }
   }
 }

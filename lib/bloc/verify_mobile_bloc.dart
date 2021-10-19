@@ -76,8 +76,14 @@ class MobileVerificationBloc extends Bloc {
             // verifyMobileSink.add(Response.completed(status.toString()));
             SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.setString("registereNumber", mobileNumber);
+
+            Navigator.pop(context);
+            Navigator.pop(context);
+            onemoney.sendSessionIdToParents();
+            // Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
+
             // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LinkAccountScreen()));
-            getProfile(context: context);
+            // getProfile(context: context);
           } else {
             verifyMobileSink.add(Response.error("something wrong"));
             // onFailure("something wrong");
@@ -142,6 +148,11 @@ class MobileVerificationBloc extends Bloc {
             // verifyMobileSink.add(Response.completed(status.toString()));
             SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.setString("registereNumber", mobileNumber);
+
+            // Navigator.pop(context);
+            // Navigator.pop(context);
+            // onemoney.sendSessionIdToParents();
+
             // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LinkAccountScreen()));
             getProfile(context: context);
           } else {
@@ -195,7 +206,11 @@ class MobileVerificationBloc extends Bloc {
           userInfo.value = (status as ProfileData).userData ?? UserData();
 
           // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => OneMoneyIDScreen()));
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentDetailsScreen()));
+          if (onemoney.isafterSignUp ?? false) {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => FinancialInstitutionScreen()));
+          } else {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentDetailsScreen()));
+          }
         } else {
           if (status is OnemoneyError) {
             verifyMobileSink.add(Response.error(status.errorMessage));

@@ -37,7 +37,7 @@ class Loader {
             child: Center(
               child: SpinKitThreeBounce(
                 color: Colors.white,
-                size: 40.h,
+                size: 40,
               ),
             ),
           ),

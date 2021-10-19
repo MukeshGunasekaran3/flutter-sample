@@ -23,7 +23,7 @@ dependencies:
   fluttertoast: ^8.0.7
   connectivity: ^3.0.6
   onemoney:
-    path: D:\ONEMONEY_FLUTTER\ONEMONEY_HEADLESS_AWS
+    path: D:\Ascra Android Projects\ONEMONEY_PROJECT\FLUTTER\FLUTTER_ONEMONEY_HEADLESS_UPDATED
 
 dev_dependencies:
   flutter_test:

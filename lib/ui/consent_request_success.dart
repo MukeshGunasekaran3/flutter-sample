@@ -13,8 +13,9 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class ConsentRequestScreen extends StatefulWidget {
   final String description;
+  final bool approveConsentStatus;
 
-  ConsentRequestScreen({Key? key, required this.description}) : super(key: key);
+  ConsentRequestScreen({Key? key, required this.description, required this.approveConsentStatus}) : super(key: key);
 
   @override
   _ConsentRequestScreenState createState() => _ConsentRequestScreenState();
@@ -102,7 +103,10 @@ class _ConsentRequestScreenState extends State<ConsentRequestScreen> {
 
   _gotoNextScreen(BuildContext context1) {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      Navigator.pushReplacement(context1, MaterialPageRoute(builder: (_) => ConsentDetailsScreen()));
+      Navigator.of(context).pop();
+      _bloc.onemoney.sendApproveRejectDataToParent({"isApprove": widget.approveConsentStatus});
+      // Navigator.of(context).pop();
+      // Navigator.pushReplacement(context1, MaterialPageRoute(builder: (_) => ConsentDetailsScreen()));
     });
   }
 }

@@ -17,7 +17,9 @@ class DiscoverAccountMainItem extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
   final bool isLinked;
   final Fip? fipModel;
+  List<Account> linkedAccountList;
   List<Account> bankAccountList;
+  final Function afterNewAccountLink;
 
   DiscoverAccountMainItem({
     this.colorModel,
@@ -26,7 +28,9 @@ class DiscoverAccountMainItem extends StatefulWidget {
     required this.scaffoldKey,
     required this.isLinked,
     this.fipModel,
+    required this.linkedAccountList,
     required this.bankAccountList,
+    required this.afterNewAccountLink,
   });
 
   @override
@@ -140,22 +144,44 @@ class _DiscoverAccountMainItemState extends State<DiscoverAccountMainItem> {
             //         });
             //   },
             // ),
+            if (widget.linkedAccountList != null)
+              ...widget.linkedAccountList
+                  .map(
+                    (e) => AccountItem(
+                      isAllowSelection: false,
+                      accountModel: e,
+                      isSelected: selectedBankAccountList.any((element) => element.data!.accRefNumber == e.data!.accRefNumber),
+                      onTapAccount: () async {
+                        //
+                        // if (selectedBankAccountList.any((element) => element.data!.accRefNumber == e.data!.accRefNumber)) {
+                        //   selectedBankAccountList.removeWhere((element) => element.data!.accRefNumber == e.data!.accRefNumber);
+                        // } else {
+                        //   selectedBankAccountList.add(e);
+                        // }
+                        print(selectedBankAccountList.length);
+                        // setState(() {});
+                      },
+                    ),
+                  )
+                  .toList(),
             if (widget.bankAccountList != null)
               ...widget.bankAccountList
-                  .map((e) => AccountItem(
-                        isAllowSelection: true,
-                        accountModel: e,
-                        isSelected: selectedBankAccountList.any((element) => element.data!.accRefNumber == e.data!.accRefNumber),
-                        onTapAccount: () async {
-                          if (selectedBankAccountList.any((element) => element.data!.accRefNumber == e.data!.accRefNumber)) {
-                            selectedBankAccountList.removeWhere((element) => element.data!.accRefNumber == e.data!.accRefNumber);
-                          } else {
-                            selectedBankAccountList.add(e);
-                          }
-                          print(selectedBankAccountList.length);
-                          setState(() {});
-                        },
-                      ))
+                  .map(
+                    (e) => AccountItem(
+                      isAllowSelection: true,
+                      accountModel: e,
+                      isSelected: selectedBankAccountList.any((element) => element.data!.accRefNumber == e.data!.accRefNumber),
+                      onTapAccount: () async {
+                        if (selectedBankAccountList.any((element) => element.data!.accRefNumber == e.data!.accRefNumber)) {
+                          selectedBankAccountList.removeWhere((element) => element.data!.accRefNumber == e.data!.accRefNumber);
+                        } else {
+                          selectedBankAccountList.add(e);
+                        }
+                        print(selectedBankAccountList.length);
+                        setState(() {});
+                      },
+                    ),
+                  )
                   .toList(),
             if (!widget.isLinked)
               Row(
@@ -186,6 +212,7 @@ class _DiscoverAccountMainItemState extends State<DiscoverAccountMainItem> {
                                     bloc: widget.bloc,
                                     scaffoldKey: widget.scaffoldKey,
                                     accountList: selectedBankAccountList,
+                                    afterNewAccountLink: widget.afterNewAccountLink,
                                   );
                                 });
                           });

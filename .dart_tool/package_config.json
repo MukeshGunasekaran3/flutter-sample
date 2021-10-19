@@ -183,7 +183,7 @@
     },
     {
       "name": "onemoney",
-      "rootUri": "file:///D:/ONEMONEY_FLUTTER/ONEMONEY_HEADLESS_AWS",
+      "rootUri": "file:///D:/Ascra%20Android%20Projects/ONEMONEY_PROJECT/FLUTTER/FLUTTER_ONEMONEY_HEADLESS_UPDATED",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -398,7 +398,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2021-08-31T13:41:48.503457Z",
+  "generated": "2021-10-19T11:39:14.641039Z",
   "generator": "pub",
   "generatorVersion": "2.13.3"
 }

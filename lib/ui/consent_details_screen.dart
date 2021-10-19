@@ -321,7 +321,8 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                                         );
                                       } else {
                                         if (isSelectWithAuth) {
-                                          _bloc!.approveConsentWithoutAuth(context: context, consentHandles: consentsList![0].consentArtefactId!, accounts: selectedAccount);
+                                          _bloc!.approveConsentWithoutAuth(
+                                              context: context, consentHandles: consentsList![0].consentArtefactId!, accounts: selectedAccount);
                                         } else {
                                           _showErrorMessage("Please read consent details and enable checkbox");
                                         }
@@ -577,7 +578,9 @@ class _ConsentDetailsScreenState extends State<ConsentDetailsScreen> {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(color: Colors.black38, width: 1),
-                                  color: selectedAccount.any((element) => element.data!.accRefNumber == e.data!.accRefNumber) ? Color(0xFF5EE27B) : Colors.white,
+                                  color: selectedAccount.any((element) => element.data!.accRefNumber == e.data!.accRefNumber)
+                                      ? Color(0xFF5EE27B)
+                                      : Colors.white,
                                 ),
                                 padding: EdgeInsets.only(left: 3, right: 3, top: 3, bottom: 3),
                                 margin: EdgeInsets.only(right: 15.w),

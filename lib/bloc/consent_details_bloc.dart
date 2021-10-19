@@ -450,7 +450,15 @@ class ConsetDetailsBloc extends Bloc {
             onSuccess();
             Future.delayed(Duration(milliseconds: 500), () async {
               Navigator.pop(context);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentRequestScreen(description: 'Consent Request Approved Successfully')));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ConsentRequestScreen(
+                    description: 'Consent Request Approved Successfully',
+                    approveConsentStatus: true,
+                  ),
+                ),
+              );
             });
           } else {
             // Navigator.pop(context);
@@ -502,7 +510,15 @@ class ConsetDetailsBloc extends Bloc {
           if (status) {
             sendOtpToUpdateConsentSink.add(Response.completed(status.toString()));
 
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentRequestScreen(description: 'Consent Request Approved Successfully')));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ConsentRequestScreen(
+                  description: 'Consent Request Approved Successfully',
+                  approveConsentStatus: true,
+                ),
+              ),
+            );
           } else {
             sendOtpToUpdateConsentSink.add(Response.error("something wrong from back"));
           }
@@ -557,7 +573,15 @@ class ConsetDetailsBloc extends Bloc {
             onSuccess();
             Future.delayed(Duration(milliseconds: 500), () async {
               Navigator.pop(context);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentRequestScreen(description: 'Consent Request Rejected Successfully')));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ConsentRequestScreen(
+                    description: 'Consent Request Rejected Successfully',
+                    approveConsentStatus: false,
+                  ),
+                ),
+              );
             });
           } else {
             rejectConsetSink.add(Response.error("Make sure your OTP is correct"));
@@ -605,7 +629,15 @@ class ConsetDetailsBloc extends Bloc {
           if (status) {
             sendOtpToUpdateConsentSink.add(Response.completed(status.toString()));
 
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ConsentRequestScreen(description: 'Consent Request Rejected Successfully')));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ConsentRequestScreen(
+                  description: 'Consent Request Rejected Successfully',
+                  approveConsentStatus: false,
+                ),
+              ),
+            );
           } else {
             sendOtpToUpdateConsentSink.add(Response.error("something wrong from back"));
           }

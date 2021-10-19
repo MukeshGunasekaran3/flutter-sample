@@ -19,8 +19,17 @@ class AccountLinkingBottomSheet extends StatefulWidget {
   final DiscoverAccounts bloc;
   final GlobalKey<ScaffoldState> scaffoldKey;
   final String bankName;
+  final Function afterNewAccountLink;
 
-  AccountLinkingBottomSheet({Key? key, required this.authSessionpara, required this.bloc, required this.scaffoldKey, required this.bankName, required this.accountList}) : super(key: key);
+  AccountLinkingBottomSheet({
+    Key? key,
+    required this.authSessionpara,
+    required this.bloc,
+    required this.scaffoldKey,
+    required this.bankName,
+    required this.accountList,
+    required this.afterNewAccountLink,
+  }) : super(key: key);
 
   @override
   _AccountLinkingBottomSheetState createState() => _AccountLinkingBottomSheetState();
@@ -63,7 +72,7 @@ class _AccountLinkingBottomSheetState extends State<AccountLinkingBottomSheet> {
             ),
             getRegularText('For ${widget.bankName} Account', fontcolor: Colors.black54, fontsize: 19.sp),
             SizedBox(
-              height: 50.h,
+              height: 40.h,
             ),
             getRegularText('OTP', fontcolor: Colors.grey, fontsize: SizeConfig.TEXT_SIZE_MEDIUM),
             SizedBox(
@@ -98,10 +107,12 @@ class _AccountLinkingBottomSheetState extends State<AccountLinkingBottomSheet> {
               keyboardType: TextInputType.number,
               onCompleted: (v) {
                 // Navigator.pop(context);
+
                 widget.bloc.verifyOTPToLinkAccount(
                   referenceNumber: widget.authSessionpara.refNumber,
                   authToken: v,
                   context: widget.scaffoldKey.currentContext!,
+                  afterNewAccountLink: widget.afterNewAccountLink,
                   onSuccess: () {
                     boxColor = Colors.green;
                     errorText = "";
